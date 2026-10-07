@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fulfillment Hub</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<style>html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body><div id="root"></div>
+<script>
+try{
+"use strict";
+const { useState, useEffect, useMemo, useRef } = React;
+const __ICONS = { "Package": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\"></path><path d=\"M12 22V12\"></path><path d=\"m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7\"></path><path d=\"m7.5 4.27 9 5.15\"></path>", "Truck": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\"></path><path d=\"M15 18H9\"></path><path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\"></path><circle cx=\"17\" cy=\"18\" r=\"2\"></circle><circle cx=\"7\" cy=\"18\" r=\"2\"></circle>", "AlertTriangle": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"></path><path d=\"M12 9v4\"></path><path d=\"M12 17h.01\"></path>", "CheckCircle2": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"m9 12 2 2 4-4\"></path>", "Clock": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline>", "QrCode": "<rect width=\"5\" height=\"5\" x=\"3\" y=\"3\" rx=\"1\"></rect><rect width=\"5\" height=\"5\" x=\"16\" y=\"3\" rx=\"1\"></rect><rect width=\"5\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"></rect><path d=\"M21 16h-3a2 2 0 0 0-2 2v3\"></path><path d=\"M21 21v.01\"></path><path d=\"M12 7v3a2 2 0 0 1-2 2H7\"></path><path d=\"M3 12h.01\"></path><path d=\"M12 3h.01\"></path><path d=\"M12 16v.01\"></path><path d=\"M16 12h1\"></path><path d=\"M21 12v.01\"></path><path d=\"M12 21v-1\"></path>", "Layers": "<path d=\"m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z\"></path><path d=\"m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65\"></path><path d=\"m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65\"></path>", "Search": "<circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path>", "Filter": "<polygon points=\"22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3\"></polygon>", "RefreshCw": "<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\"></path><path d=\"M21 3v5h-5\"></path><path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\"></path><path d=\"M8 16H3v5\"></path>", "Sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2\"></path><path d=\"M12 20v2\"></path><path d=\"m4.93 4.93 1.41 1.41\"></path><path d=\"m17.66 17.66 1.41 1.41\"></path><path d=\"M2 12h2\"></path><path d=\"M20 12h2\"></path><path d=\"m6.34 17.66-1.41 1.41\"></path><path d=\"m19.07 4.93-1.41 1.41\"></path>", "Moon": "<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"></path>", "Volume2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\"></path><path d=\"M16 9a5 5 0 0 1 0 6\"></path><path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\"></path>", "VolumeX": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\"></path><line x1=\"22\" x2=\"16\" y1=\"9\" y2=\"15\"></line><line x1=\"16\" x2=\"22\" y1=\"9\" y2=\"15\"></line>", "ArrowRight": "<path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path>", "ShieldAlert": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"></path><path d=\"M12 8v4\"></path><path d=\"M12 16h.01\"></path>", "Printer": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"></path><path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\"></path><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\"></rect>", "ChevronRight": "<path d=\"m9 18 6-6-6-6\"></path>", "MapPin": "<path d=\"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle>", "Check": "<path d=\"M20 6 9 17l-5-5\"></path>", "X": "<path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path>", "Building2": "<path d=\"M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z\"></path><path d=\"M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2\"></path><path d=\"M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2\"></path><path d=\"M10 6h4\"></path><path d=\"M10 10h4\"></path><path d=\"M10 14h4\"></path><path d=\"M10 18h4\"></path>", "Sparkles": "<path d=\"M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z\"></path><path d=\"M20 3v4\"></path><path d=\"M22 5h-4\"></path><path d=\"M4 17v2\"></path><path d=\"M5 18H3\"></path>", "Zap": "<path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"></path>", "BarChart3": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\"></path><path d=\"M18 17V9\"></path><path d=\"M13 17V5\"></path><path d=\"M8 17v-3\"></path>", "UserCheck": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><polyline points=\"16 11 18 13 22 9\"></polyline>", "LayoutDashboard": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\"></rect><rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\"></rect><rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\"></rect><rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"></rect>" };
+const __mk = (k) => function (p) { p = p || {}; const s = p.size || 24; return React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: s, height: s, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: p.strokeWidth || 2, strokeLinecap: 'round', strokeLinejoin: 'round', className: p.className, style: p.style, 'aria-hidden': 'true', dangerouslySetInnerHTML: { __html: __ICONS[k] } }); };
+const Package = __mk('Package'), Truck = __mk('Truck'), AlertTriangle = __mk('AlertTriangle'), CheckCircle2 = __mk('CheckCircle2'), Clock = __mk('Clock'), QrCode = __mk('QrCode'), Layers = __mk('Layers'), Search = __mk('Search'), Filter = __mk('Filter'), RefreshCw = __mk('RefreshCw'), Sun = __mk('Sun'), Moon = __mk('Moon'), Volume2 = __mk('Volume2'), VolumeX = __mk('VolumeX'), ArrowRight = __mk('ArrowRight'), ShieldAlert = __mk('ShieldAlert'), Printer = __mk('Printer'), ChevronRight = __mk('ChevronRight'), MapPin = __mk('MapPin'), Check = __mk('Check'), X = __mk('X'), Building2 = __mk('Building2'), Sparkles = __mk('Sparkles'), Zap = __mk('Zap'), BarChart3 = __mk('BarChart3'), UserCheck = __mk('UserCheck'), LayoutDashboard = __mk('LayoutDashboard');
+// Audio feedback generator for warehouse scanner simulation
+const playSound = (type, soundEnabled = true) => {
+    if (!soundEnabled)
+        return;
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if (type === 'success') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+        else if (type === 'error') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+        else if (type === 'click') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+    }
+    catch (e) {
+        console.error('Audio context error', e);
+    }
+};
+const INITIAL_PRODUCTS = [
+    { sku: 'TSHIRT-BLK-L', name: 'Classic Unisex Cotton Tee', variant: 'Black / Large', bin: 'A-12-03', locationZone: 'MAIN', barcode: '849201823011', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&q=80', stockMain: 42, stockSecondary: 120 },
+    { sku: 'TSHIRT-BLK-M', name: 'Classic Unisex Cotton Tee', variant: 'Black / Medium', bin: 'A-12-02', locationZone: 'MAIN', barcode: '849201823012', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300&q=80', stockMain: 5, stockSecondary: 80 },
+    { sku: 'HOODIE-GRY-XL', name: 'Heavyweight Pullover Hoodie', variant: 'Heather Grey / XL', bin: 'B-04-01', locationZone: 'MAIN', barcode: '739104829102', image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=300&q=80', stockMain: 18, stockSecondary: 50 },
+    { sku: 'CAP-NVY-OS', name: 'Structured Dad Cap', variant: 'Navy / One Size', bin: 'C-01-14', locationZone: 'SECONDARY', barcode: '910284719203', image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=300&q=80', stockMain: 0, stockSecondary: 45 },
+    { sku: 'MUG-WHT-12', name: 'Ceramic Coffee Mug 12oz', variant: 'Glossy White', bin: 'D-08-05', locationZone: 'MAIN', barcode: '619284019283', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&q=80', stockMain: 60, stockSecondary: 200 },
+    { sku: 'SOCKS-CREW-WHT', name: 'Athletic Crew Socks 3-Pack', variant: 'White / US 9-12', bin: 'A-02-09', locationZone: 'MAIN', barcode: '510293847561', image: 'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=300&q=80', stockMain: 100, stockSecondary: 300 }
+];
+const INITIAL_ORDERS = [
+    {
+        id: 'ORD-8921',
+        customer: 'Sarah Jenkins',
+        channel: 'Shopify Store',
+        isPriority: true,
+        cutoffMinutes: 24,
+        status: 'RECEIVED',
+        createdAt: '10:15 AM',
+        courier: 'DHL Express',
+        items: [
+            { sku: 'TSHIRT-BLK-L', quantity: 2, picked: 0, packed: 0 },
+            { sku: 'HOODIE-GRY-XL', quantity: 1, picked: 0, packed: 0 }
+        ],
+        stagingZone: null
+    },
+    {
+        id: 'ORD-8922',
+        customer: 'Marcus Vance',
+        channel: 'Amazon US',
+        isPriority: true,
+        cutoffMinutes: 45,
+        status: 'PICKING',
+        createdAt: '10:22 AM',
+        courier: 'FedEx Priority',
+        items: [
+            { sku: 'CAP-NVY-OS', quantity: 1, picked: 0, packed: 0 }
+        ],
+        stagingZone: null
+    },
+    {
+        id: 'ORD-8923',
+        customer: 'Elena Rostova',
+        channel: 'WooCommerce',
+        isPriority: false,
+        cutoffMinutes: 180,
+        status: 'RECEIVED',
+        createdAt: '10:45 AM',
+        courier: 'USPS Ground',
+        items: [
+            { sku: 'MUG-WHT-12', quantity: 4, picked: 0, packed: 0 },
+            { sku: 'SOCKS-CREW-WHT', quantity: 2, picked: 0, packed: 0 }
+        ],
+        stagingZone: null
+    },
+    {
+        id: 'ORD-8920',
+        customer: 'David Miller',
+        channel: 'Shopify Store',
+        isPriority: false,
+        cutoffMinutes: 120,
+        status: 'PACKING',
+        createdAt: '09:50 AM',
+        courier: 'FedEx Ground',
+        items: [
+            { sku: 'TSHIRT-BLK-M', quantity: 1, picked: 1, packed: 0 }
+        ],
+        stagingZone: null
+    },
+    {
+        id: 'ORD-8918',
+        customer: 'Jessica Taylor',
+        channel: 'Etsy Direct',
+        isPriority: true,
+        cutoffMinutes: 10,
+        status: 'ISSUE',
+        createdAt: '09:30 AM',
+        courier: 'DHL Express',
+        issueReason: 'Stock Discrepancy reported at Bin A-12-02 (TSHIRT-BLK-M missing)',
+        items: [
+            { sku: 'TSHIRT-BLK-M', quantity: 2, picked: 0, packed: 0 }
+        ],
+        stagingZone: null
+    },
+    {
+        id: 'ORD-8915',
+        customer: 'Tom Brady',
+        channel: 'Shopify Store',
+        isPriority: false,
+        cutoffMinutes: 300,
+        status: 'STAGED',
+        createdAt: '08:40 AM',
+        courier: 'DHL Express',
+        stagingZone: 'STAGE-DHL-02',
+        items: [
+            { sku: 'SOCKS-CREW-WHT', quantity: 1, picked: 1, packed: 1 }
+        ]
+    },
+    {
+        id: 'ORD-8912',
+        customer: 'Amanda Lewis',
+        channel: 'Amazon US',
+        isPriority: false,
+        cutoffMinutes: 0,
+        status: 'SHIPPED',
+        createdAt: '08:10 AM',
+        courier: 'USPS Ground',
+        stagingZone: 'STAGE-USPS-01',
+        items: [
+            { sku: 'MUG-WHT-12', quantity: 2, picked: 2, packed: 2 }
+        ]
+    }
+];
+const COURIER_SCHEDULES = [
+    { id: 'dhl', name: 'DHL Express', nextPickup: '11:45 AM (In 22 min)', stagedBoxes: 14, driverStatus: 'En Route' },
+    { id: 'fedex', name: 'FedEx Priority / Ground', nextPickup: '01:30 PM (In 2h 07m)', stagedBoxes: 28, driverStatus: 'Scheduled' },
+    { id: 'usps', name: 'USPS Ground Advantage', nextPickup: '03:00 PM (In 3h 37m)', stagedBoxes: 9, driverStatus: 'Scheduled' }
+];
+function App() {
+    const [activeRole, setActiveRole] = useState('kiosk');
+    const [orders, setOrders] = useState(INITIAL_ORDERS);
+    const [products, setProducts] = useState(INITIAL_PRODUCTS);
+    const [soundEnabled, setSoundEnabled] = useState(true);
+    const [highContrast, setHighContrast] = useState(false);
+    const [logs, setLogs] = useState([
+        { id: 1, time: '10:52 AM', text: 'System initialized. 2 Priority orders require immediate processing.', type: 'info' }
+    ]);
+    const [activeOrderId, setActiveOrderId] = useState(null);
+    const [currentPickItemIndex, setCurrentPickItemIndex] = useState(0);
+    const [scannedInput, setScannedInput] = useState('');
+    const [scanErrorModal, setScanErrorModal] = useState(null);
+    const [discrepancyModalOpen, setDiscrepancyModalOpen] = useState(false);
+    const [stagingModalOpen, setStagingModalOpen] = useState(false);
+    const [printedLabelOrder, setPrintedLabelOrder] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('ALL');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [priorityOnly, setPriorityOnly] = useState(false);
+    const scanInputRef = useRef(null);
+    const addLog = (text, type = 'info') => {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setLogs((prev) => [{ id: Date.now(), time, text, type }, ...prev.slice(0, 49)]);
+    };
+    const activeOrder = useMemo(() => {
+        return orders.find((o) => o.id === activeOrderId) || null;
+    }, [orders, activeOrderId]);
+    const priorityQueue = useMemo(() => {
+        return orders.filter((o) => o.status === 'RECEIVED' || o.status === 'PICKING' || o.status === 'PACKING')
+            .sort((a, b) => {
+            if (a.isPriority && !b.isPriority)
+                return -1;
+            if (!a.isPriority && b.isPriority)
+                return 1;
+            return a.cutoffMinutes - b.cutoffMinutes;
+        });
+    }, [orders]);
+    useEffect(() => {
+        if (activeRole === 'kiosk' && activeOrder && scanInputRef.current) {
+            scanInputRef.current.focus();
+        }
+    }, [activeRole, activeOrder, currentPickItemIndex]);
+    const handlePhysicalScanSubmit = (e) => {
+        e.preventDefault();
+        if (!scannedInput.trim())
+            return;
+        verifyBarcode(scannedInput.trim());
+        setScannedInput('');
+    };
+    const verifyBarcode = (barcodeScanned) => {
+        if (!activeOrder)
+            return;
+        const currentItem = activeOrder.items[currentPickItemIndex];
+        const productInfo = products.find((p) => p.sku === currentItem.sku);
+        if (!productInfo)
+            return;
+        if (barcodeScanned === productInfo.barcode || barcodeScanned === productInfo.sku) {
+            playSound('success', soundEnabled);
+            addLog(`[PASS] Verified SKU: ${productInfo.sku} (${productInfo.variant}) for Order ${activeOrder.id}`, 'success');
+            const updatedOrders = orders.map((ord) => {
+                if (ord.id === activeOrder.id) {
+                    const updatedItems = [...ord.items];
+                    const itemToUpdate = { ...updatedItems[currentPickItemIndex] };
+                    itemToUpdate.picked = Math.min(itemToUpdate.quantity, itemToUpdate.picked + 1);
+                    updatedItems[currentPickItemIndex] = itemToUpdate;
+                    const allPicked = updatedItems.every((it) => it.picked >= it.quantity);
+                    const nextStatus = allPicked ? 'PACKING' : 'PICKING';
+                    return { ...ord, items: updatedItems, status: nextStatus };
+                }
+                return ord;
+            });
+            setOrders(updatedOrders);
+            if (currentItem.picked + 1 >= currentItem.quantity) {
+                if (currentPickItemIndex + 1 < activeOrder.items.length) {
+                    setCurrentPickItemIndex((prev) => prev + 1);
+                }
+            }
+        }
+        else {
+            playSound('error', soundEnabled);
+            addLog(`[REJECT] Wrong barcode scanned "${barcodeScanned}". Expected ${productInfo.barcode} (${productInfo.sku})`, 'error');
+            setScanErrorModal({
+                scanned: barcodeScanned,
+                expectedSku: productInfo.sku,
+                expectedBarcode: productInfo.barcode,
+                expectedName: productInfo.name,
+                expectedVariant: productInfo.variant
+            });
+        }
+    };
+    const handleReportDiscrepancy = (reason) => {
+        if (!activeOrder)
+            return;
+        const currentItem = activeOrder.items[currentPickItemIndex];
+        const productInfo = products.find((p) => p.sku === currentItem.sku);
+        playSound('error', soundEnabled);
+        addLog(`[ALERT] Inventory Discrepancy reported on Order ${activeOrder.id} at Bin ${productInfo === null || productInfo === void 0 ? void 0 : productInfo.bin}! Flagged for Office.`, 'error');
+        setOrders((prev) => prev.map((ord) => ord.id === activeOrder.id
+            ? {
+                ...ord,
+                status: 'ISSUE',
+                issueReason: `Warehouse Gap: ${productInfo === null || productInfo === void 0 ? void 0 : productInfo.sku} (${productInfo === null || productInfo === void 0 ? void 0 : productInfo.variant}) missing at Bin ${productInfo === null || productInfo === void 0 ? void 0 : productInfo.bin}. Notes: ${reason}`
+            }
+            : ord));
+        setDiscrepancyModalOpen(false);
+        setActiveOrderId(null);
+    };
+    const handleCompletePacking = () => {
+        if (!activeOrder)
+            return;
+        playSound('success', soundEnabled);
+        let stagingZone = 'STAGE-A-01';
+        if (activeOrder.courier.includes('DHL'))
+            stagingZone = 'STAGE-DHL-04';
+        if (activeOrder.courier.includes('FedEx'))
+            stagingZone = 'STAGE-FEDEX-12';
+        if (activeOrder.courier.includes('USPS'))
+            stagingZone = 'STAGE-USPS-02';
+        setOrders((prev) => prev.map((ord) => ord.id === activeOrder.id
+            ? {
+                ...ord,
+                status: 'STAGED',
+                stagingZone,
+                items: ord.items.map((i) => ({ ...i, packed: i.quantity }))
+            }
+            : ord));
+        setPrintedLabelOrder({ ...activeOrder, stagingZone });
+        addLog(`[PACKED] Order ${activeOrder.id} packed and assigned to ${stagingZone}`, 'success');
+        setStagingModalOpen(true);
+    };
+    const finishKioskOrderSession = () => {
+        setStagingModalOpen(false);
+        setPrintedLabelOrder(null);
+        setActiveOrderId(null);
+        setCurrentPickItemIndex(0);
+    };
+    const handleTransferStock = (sku) => {
+        setProducts((prev) => prev.map((p) => {
+            if (p.sku === sku && p.stockSecondary > 0) {
+                return {
+                    ...p,
+                    stockMain: p.stockMain + 10,
+                    stockSecondary: p.stockSecondary - 10
+                };
+            }
+            return p;
+        }));
+        addLog(`[STOCK MOVED] Transferred 10 units of ${sku} from Secondary to Main Warehouse.`, 'info');
+    };
+    const filteredOfficeOrders = orders.filter((o) => {
+        const matchesStatus = statusFilter === 'ALL' || o.status === statusFilter;
+        const matchesPriority = !priorityOnly || o.isPriority;
+        const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            o.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            o.courier.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesStatus && matchesPriority && matchesSearch;
+    });
+    const issueOrdersCount = orders.filter((o) => o.status === 'ISSUE').length;
+    const urgentPriorityCount = orders.filter((o) => o.isPriority && (o.status === 'RECEIVED' || o.status === 'PICKING')).length;
+    return (React.createElement("div", { className: `min-h-screen font-sans ${highContrast ? 'bg-black text-yellow-300' : 'bg-slate-900 text-slate-100'} transition-colors duration-200` },
+        React.createElement("header", { className: `border-b ${highContrast ? 'border-yellow-500 bg-black' : 'border-slate-800 bg-slate-950'} sticky top-0 z-40 px-4 py-3 shadow-lg` },
+            React.createElement("div", { className: "max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3" },
+                React.createElement("div", { className: "flex items-center gap-3" },
+                    React.createElement("div", { className: `p-2.5 rounded-xl ${highContrast ? 'bg-yellow-400 text-black' : 'bg-indigo-600 text-white'} shadow-md` },
+                        React.createElement(Package, { className: "w-6 h-6 stroke-[2.5]" })),
+                    React.createElement("div", null,
+                        React.createElement("h1", { className: "text-xl font-bold tracking-wide flex items-center gap-2" },
+                            "FULFILLMENT HUB",
+                            React.createElement("span", { className: "text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-normal border border-slate-700" }, "By GK Maurya")),
+                        React.createElement("p", { className: "text-xs text-slate-400 hidden sm:block" }, "XYZ Logistics-Order & Warehouse Management System"))),
+                React.createElement("div", { className: "flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800" },
+                    React.createElement("button", { onClick: () => {
+                            setActiveRole('kiosk');
+                            playSound('click', soundEnabled);
+                        }, className: `flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeRole === 'kiosk'
+                            ? highContrast
+                                ? 'bg-yellow-400 text-black font-extrabold shadow-lg'
+                                : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800'}` },
+                        React.createElement(QrCode, { className: "w-4 h-4" }),
+                        React.createElement("span", null, "Warehouse Kiosk"),
+                        urgentPriorityCount > 0 && (React.createElement("span", { className: "ml-1 px-1.5 py-0.2 rounded-full bg-red-500 text-white text-xs font-bold animate-pulse" }, urgentPriorityCount))),
+                    React.createElement("button", { onClick: () => {
+                            setActiveRole('office');
+                            playSound('click', soundEnabled);
+                        }, className: `flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeRole === 'office'
+                            ? highContrast
+                                ? 'bg-yellow-400 text-black font-extrabold shadow-lg'
+                                : 'bg-indigo-600 text-white shadow-md'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800'}` },
+                        React.createElement(LayoutDashboard, { className: "w-4 h-4" }),
+                        React.createElement("span", null, "Office Overview"),
+                        issueOrdersCount > 0 && (React.createElement("span", { className: "ml-1 px-1.5 py-0.2 rounded-full bg-amber-500 text-black text-xs font-extrabold" }, issueOrdersCount)))),
+                React.createElement("div", { className: "flex items-center gap-2" },
+                    React.createElement("button", { onClick: () => setSoundEnabled(!soundEnabled), title: soundEnabled ? 'Mute Warehouse Sound Effects' : 'Enable Audio Prompts', className: `p-2.5 rounded-lg border text-sm font-semibold transition ${soundEnabled ? 'border-slate-700 bg-slate-800 text-emerald-400' : 'border-slate-800 bg-slate-900 text-slate-500'}` }, soundEnabled ? React.createElement(Volume2, { className: "w-5 h-5" }) : React.createElement(VolumeX, { className: "w-5 h-5" })),
+                    React.createElement("button", { onClick: () => setHighContrast(!highContrast), title: "Toggle High-Contrast Warehouse Light Mode", className: `p-2.5 rounded-lg border text-sm font-semibold transition ${highContrast ? 'border-yellow-400 bg-yellow-400 text-black' : 'border-slate-700 bg-slate-800 text-slate-300'}` }, highContrast ? React.createElement(Sun, { className: "w-5 h-5" }) : React.createElement(Moon, { className: "w-5 h-5" }))))),
+        React.createElement("main", { className: "max-w-7xl mx-auto p-4 md:p-6" },
+            activeRole === 'kiosk' ? (React.createElement(WarehouseKioskView, { orders: orders, activeOrder: activeOrder, setActiveOrderId: setActiveOrderId, priorityQueue: priorityQueue, currentPickItemIndex: currentPickItemIndex, setCurrentPickItemIndex: setCurrentPickItemIndex, products: products, scannedInput: scannedInput, setScannedInput: setScannedInput, handlePhysicalScanSubmit: handlePhysicalScanSubmit, verifyBarcode: verifyBarcode, scanInputRef: scanInputRef, highContrast: highContrast, soundEnabled: soundEnabled, setDiscrepancyModalOpen: setDiscrepancyModalOpen, handleCompletePacking: handleCompletePacking, finishKioskOrderSession: finishKioskOrderSession })) : (React.createElement(OfficeDashboardView, { orders: filteredOfficeOrders, allOrders: orders, products: products, courierSchedules: COURIER_SCHEDULES, statusFilter: statusFilter, setStatusFilter: setStatusFilter, searchQuery: searchQuery, setSearchQuery: setSearchQuery, priorityOnly: priorityOnly, setPriorityOnly: setPriorityOnly, handleTransferStock: handleTransferStock, highContrast: highContrast, setActiveRole: setActiveRole, setActiveOrderId: setActiveOrderId })),
+            React.createElement("div", { className: "mt-8 border-t border-slate-800 pt-4" },
+                React.createElement("div", { className: "flex items-center justify-between mb-2" },
+                    React.createElement("h3", { className: "text-xs font-bold tracking-wider text-slate-400 uppercase flex items-center gap-2" },
+                        React.createElement(Zap, { className: "w-4 h-4 text-amber-400" }),
+                        "Real-time Warehouse Event Log"),
+                    React.createElement("span", { className: "text-xs text-slate-500" },
+                        logs.length,
+                        " events logged")),
+                React.createElement("div", { className: "bg-slate-950 border border-slate-800 rounded-xl p-3 h-28 overflow-y-auto font-mono text-xs space-y-1.5 shadow-inner" }, logs.map((log) => (React.createElement("div", { key: log.id, className: `flex items-start gap-2 ${log.type === 'error'
+                        ? 'text-red-400 font-semibold'
+                        : log.type === 'success'
+                            ? 'text-emerald-400'
+                            : 'text-slate-300'}` },
+                    React.createElement("span", { className: "text-slate-600 select-none" },
+                        "[",
+                        log.time,
+                        "]"),
+                    React.createElement("span", null, log.text))))))),
+        scanErrorModal && (React.createElement("div", { className: "fixed inset-0 z-50 bg-red-950/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200" },
+            React.createElement("div", { className: "bg-slate-900 border-4 border-red-500 rounded-2xl max-w-lg w-full p-6 text-center shadow-2xl space-y-6" },
+                React.createElement("div", { className: "inline-flex p-4 rounded-full bg-red-500/20 text-red-500 animate-bounce" },
+                    React.createElement(AlertTriangle, { className: "w-16 h-16" })),
+                React.createElement("div", null,
+                    React.createElement("h2", { className: "text-3xl font-black text-red-500 tracking-tight uppercase" }, "BARCODE MISMATCH!"),
+                    React.createElement("p", { className: "text-slate-300 font-medium text-lg mt-1" }, "Wrong product or variant scanned.")),
+                React.createElement("div", { className: "bg-slate-950 border border-slate-800 rounded-xl p-4 text-left space-y-2" },
+                    React.createElement("div", { className: "flex justify-between border-b border-slate-800 pb-2" },
+                        React.createElement("span", { className: "text-slate-400 text-sm" }, "Scanned Code:"),
+                        React.createElement("span", { className: "font-mono font-bold text-red-400" }, scanErrorModal.scanned)),
+                    React.createElement("div", { className: "flex justify-between border-b border-slate-800 pb-2" },
+                        React.createElement("span", { className: "text-slate-400 text-sm" }, "Expected Item:"),
+                        React.createElement("span", { className: "font-bold text-white text-sm" }, scanErrorModal.expectedName)),
+                    React.createElement("div", { className: "flex justify-between border-b border-slate-800 pb-2" },
+                        React.createElement("span", { className: "text-slate-400 text-sm" }, "Required Variant:"),
+                        React.createElement("span", { className: "font-extrabold text-amber-400 text-sm" }, scanErrorModal.expectedVariant)),
+                    React.createElement("div", { className: "flex justify-between" },
+                        React.createElement("span", { className: "text-slate-400 text-sm" }, "Expected SKU:"),
+                        React.createElement("span", { className: "font-mono font-bold text-emerald-400" }, scanErrorModal.expectedSku))),
+                React.createElement("button", { onClick: () => {
+                        playSound('click', soundEnabled);
+                        setScanErrorModal(null);
+                        if (scanInputRef.current)
+                            scanInputRef.current.focus();
+                    }, className: "w-full py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xl shadow-lg transition active:scale-95" }, "DISMISS & TRY AGAIN")))),
+        discrepancyModalOpen && (React.createElement("div", { className: "fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4" },
+            React.createElement("div", { className: "bg-slate-900 border-2 border-amber-500 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4" },
+                React.createElement("div", { className: "flex items-center gap-3 text-amber-400" },
+                    React.createElement(ShieldAlert, { className: "w-8 h-8" }),
+                    React.createElement("div", null,
+                        React.createElement("h3", { className: "text-xl font-bold text-white" }, "Report Missing Inventory"),
+                        React.createElement("p", { className: "text-xs text-slate-400" }, "Flags office team & pauses order picking"))),
+                React.createElement("p", { className: "text-sm text-slate-300" }, "Confirm that item is absent from shelf bin location. Office will be notified to reconcile or reassign stock."),
+                React.createElement("div", { className: "space-y-2 pt-2" },
+                    React.createElement("button", { onClick: () => handleReportDiscrepancy('Shelf empty / Zero physical stock'), className: "w-full p-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-left font-semibold text-sm border border-slate-700 flex items-center justify-between" },
+                        React.createElement("span", null, "1. Bin shelf is completely empty"),
+                        React.createElement(ChevronRight, { className: "w-4 h-4 text-slate-400" })),
+                    React.createElement("button", { onClick: () => handleReportDiscrepancy('Damaged or open box on shelf'), className: "w-full p-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-left font-semibold text-sm border border-slate-700 flex items-center justify-between" },
+                        React.createElement("span", null, "2. Damaged/unusable product unit"),
+                        React.createElement(ChevronRight, { className: "w-4 h-4 text-slate-400" })),
+                    React.createElement("button", { onClick: () => handleReportDiscrepancy('Mislabeled barcode on physical box'), className: "w-full p-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-left font-semibold text-sm border border-slate-700 flex items-center justify-between" },
+                        React.createElement("span", null, "3. Physical product barcode incorrect"),
+                        React.createElement(ChevronRight, { className: "w-4 h-4 text-slate-400" }))),
+                React.createElement("div", { className: "pt-2 flex gap-3" },
+                    React.createElement("button", { onClick: () => setDiscrepancyModalOpen(false), className: "w-full py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm" }, "Cancel"))))),
+        stagingModalOpen && printedLabelOrder && (React.createElement("div", { className: "fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4" },
+            React.createElement("div", { className: "bg-slate-900 border border-emerald-500 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-6" },
+                React.createElement("div", { className: "text-center space-y-2" },
+                    React.createElement("div", { className: "inline-flex p-3 rounded-full bg-emerald-500/20 text-emerald-400" },
+                        React.createElement(CheckCircle2, { className: "w-12 h-12" })),
+                    React.createElement("h2", { className: "text-2xl font-black text-white" }, "ORDER PACKED SUCCESSFULLY!"),
+                    React.createElement("p", { className: "text-slate-400 text-sm" }, "Shipping label generated and sent to thermal printer")),
+                React.createElement("div", { className: "bg-white text-black p-4 rounded-xl shadow-inner font-mono text-xs space-y-3 border-2 border-black" },
+                    React.createElement("div", { className: "flex justify-between items-center border-b-2 border-black pb-2" },
+                        React.createElement("span", { className: "font-extrabold text-lg tracking-tighter" }, printedLabelOrder.courier),
+                        React.createElement("span", { className: "bg-black text-white px-2 py-0.5 text-xs font-bold" }, "PRIORITY PARCEL")),
+                    React.createElement("div", { className: "grid grid-cols-2 gap-2 text-[11px]" },
+                        React.createElement("div", null,
+                            React.createElement("p", { className: "text-slate-500 uppercase text-[9px] font-sans font-bold" }, "SHIP FROM:"),
+                            React.createElement("p", { className: "font-bold" }, "XYZ Fulfillment Center"),
+                            React.createElement("p", null, "Main Warehouse Gate 4")),
+                        React.createElement("div", null,
+                            React.createElement("p", { className: "text-slate-500 uppercase text-[9px] font-sans font-bold" }, "SHIP TO:"),
+                            React.createElement("p", { className: "font-bold" }, printedLabelOrder.customer),
+                            React.createElement("p", null, "104 West Broadway Ave"))),
+                    React.createElement("div", { className: "border-t-2 border-b-2 border-black py-2 text-center bg-slate-100 rounded" },
+                        React.createElement("p", { className: "text-[10px] text-slate-600 font-sans uppercase font-bold" }, "ASSIGNED STAGING BIN"),
+                        React.createElement("p", { className: "text-3xl font-black text-indigo-900 tracking-wider my-1" }, printedLabelOrder.stagingZone),
+                        React.createElement("p", { className: "text-[10px] text-slate-500" }, "Place box in designated courier staging shelf")),
+                    React.createElement("div", { className: "pt-1 flex justify-center" },
+                        React.createElement("div", { className: "h-10 bg-slate-900 w-3/4 rounded flex items-center justify-center text-white text-[10px] tracking-widest font-bold" }, "||||| ||||||| |||| |||||| |||||||"))),
+                React.createElement("button", { onClick: finishKioskOrderSession, className: "w-full py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-lg shadow-lg transition active:scale-95" }, "COMPLETE & RETURN TO QUEUE"))))));
+}
+function WarehouseKioskView({ orders, activeOrder, setActiveOrderId, priorityQueue, currentPickItemIndex, setCurrentPickItemIndex, products, scannedInput, setScannedInput, handlePhysicalScanSubmit, verifyBarcode, scanInputRef, highContrast, soundEnabled, setDiscrepancyModalOpen, handleCompletePacking }) {
+    if (!activeOrder) {
+        return (React.createElement("div", { className: "space-y-6" },
+            React.createElement("div", { className: `p-4 rounded-2xl border ${highContrast ? 'bg-yellow-400 text-black border-yellow-500' : 'bg-gradient-to-r from-slate-800 to-slate-900 border-slate-700'} shadow-md flex items-center justify-between` },
+                React.createElement("div", { className: "flex items-center gap-3" },
+                    React.createElement(QrCode, { className: "w-8 h-8 text-emerald-400" }),
+                    React.createElement("div", null,
+                        React.createElement("h2", { className: "text-2xl font-black tracking-tight" }, "WAREHOUSE PICKING KIOSK"),
+                        React.createElement("p", { className: "text-sm opacity-80" }, "Select an order from the prioritized queue below to start guided picking."))),
+                React.createElement("div", { className: "text-right hidden sm:block" },
+                    React.createElement("span", { className: "text-xs uppercase font-bold text-slate-400" }, "Queue Length"),
+                    React.createElement("p", { className: "text-2xl font-black" },
+                        priorityQueue.length,
+                        " Orders Pending"))),
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" }, priorityQueue.length === 0 ? (React.createElement("div", { className: "col-span-full py-16 text-center bg-slate-950 border border-slate-800 rounded-2xl" },
+                React.createElement(CheckCircle2, { className: "w-16 h-16 text-emerald-500 mx-auto mb-3" }),
+                React.createElement("h3", { className: "text-xl font-bold text-white" }, "All Orders Processed!"),
+                React.createElement("p", { className: "text-slate-400 text-sm" }, "No pending picking tasks in queue right now."))) : (priorityQueue.map((order) => {
+                const itemCount = order.items.reduce((acc, i) => acc + i.quantity, 0);
+                const isUrgent = order.isPriority;
+                return (React.createElement("div", { key: order.id, onClick: () => {
+                        playSound('click', soundEnabled);
+                        setActiveOrderId(order.id);
+                        setCurrentPickItemIndex(0);
+                    }, className: `group relative p-5 rounded-2xl border-2 transition-all cursor-pointer hover:scale-[1.02] shadow-xl ${isUrgent
+                        ? highContrast
+                            ? 'bg-yellow-400 border-black text-black'
+                            : 'bg-slate-900 border-red-500/80 hover:border-red-400'
+                        : 'bg-slate-900 border-slate-800 hover:border-indigo-500'}` },
+                    isUrgent && (React.createElement("div", { className: "absolute -top-3 left-4 px-3 py-1 rounded-full bg-red-600 text-white text-xs font-black tracking-wider uppercase shadow-md flex items-center gap-1 animate-pulse" },
+                        React.createElement(Clock, { className: "w-3.5 h-3.5" }),
+                        "SAME-DAY PRIORITY (",
+                        order.cutoffMinutes,
+                        "m LEFT)")),
+                    React.createElement("div", { className: "flex justify-between items-start mb-3 pt-1" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs font-mono font-bold text-slate-400" }, order.channel),
+                            React.createElement("h3", { className: "text-2xl font-black tracking-tight text-white group-hover:text-indigo-400 transition" }, order.id),
+                            React.createElement("p", { className: "text-sm font-semibold text-slate-300" }, order.customer)),
+                        React.createElement("span", { className: "px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs font-bold border border-slate-700" }, order.courier)),
+                    React.createElement("div", { className: "bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 mb-4 space-y-1" },
+                        React.createElement("p", { className: "text-xs text-slate-400 font-bold uppercase mb-1" },
+                            itemCount,
+                            " TOTAL ITEMS TO PICK"),
+                        order.items.map((it, idx) => {
+                            const prod = products.find((p) => p.sku === it.sku);
+                            return (React.createElement("div", { key: idx, className: "flex justify-between text-xs text-slate-300" },
+                                React.createElement("span", { className: "truncate max-w-[200px]" }, prod ? prod.name : it.sku),
+                                React.createElement("span", { className: "font-mono font-bold text-amber-400" },
+                                    "x",
+                                    it.quantity)));
+                        })),
+                    React.createElement("button", { className: "w-full py-3.5 rounded-xl bg-indigo-600 group-hover:bg-indigo-500 text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2 shadow-lg transition" },
+                        "START PICKING ORDER",
+                        React.createElement(ArrowRight, { className: "w-5 h-5" }))));
+            })))));
+    }
+    const currentItem = activeOrder.items[currentPickItemIndex];
+    const currentProduct = products.find((p) => p.sku === (currentItem === null || currentItem === void 0 ? void 0 : currentItem.sku));
+    const isPackingStage = activeOrder.status === 'PACKING';
+    const totalItemsCount = activeOrder.items.reduce((acc, i) => acc + i.quantity, 0);
+    const totalPickedCount = activeOrder.items.reduce((acc, i) => acc + i.picked, 0);
+    return (React.createElement("div", { className: "space-y-6" },
+        React.createElement("div", { className: "flex flex-wrap items-center justify-between gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800" },
+            React.createElement("button", { onClick: () => {
+                    playSound('click', soundEnabled);
+                    setActiveOrderId(null);
+                }, className: "px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm flex items-center gap-2 border border-slate-700" }, "\u2190 Pause & Back to Queue"),
+            React.createElement("div", { className: "flex items-center gap-4" },
+                React.createElement("div", null,
+                    React.createElement("span", { className: "text-xs text-slate-400 uppercase font-bold" }, "Active Order"),
+                    React.createElement("h2", { className: "text-2xl font-black text-white" }, activeOrder.id)),
+                React.createElement("div", { className: "h-8 w-px bg-slate-800" }),
+                React.createElement("div", null,
+                    React.createElement("span", { className: "text-xs text-slate-400 uppercase font-bold" }, "Progress"),
+                    React.createElement("p", { className: "text-xl font-bold text-emerald-400" },
+                        totalPickedCount,
+                        " / ",
+                        totalItemsCount,
+                        " Units Picked"))),
+            activeOrder.isPriority && (React.createElement("span", { className: "px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-black tracking-wide flex items-center gap-1.5" },
+                React.createElement(Clock, { className: "w-4 h-4" }),
+                "PRIORITY ORDER (",
+                activeOrder.cutoffMinutes,
+                "m REMAINING)"))),
+        !isPackingStage && currentProduct ? (React.createElement("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" },
+            React.createElement("div", { className: "lg:col-span-8 bg-slate-900 border-2 border-indigo-500/80 rounded-3xl p-6 shadow-2xl space-y-6" },
+                React.createElement("div", { className: "bg-gradient-to-r from-amber-500 to-amber-600 text-black p-4 rounded-2xl shadow-lg flex items-center justify-between" },
+                    React.createElement("div", null,
+                        React.createElement("span", { className: "text-xs uppercase font-black tracking-widest text-black/80" }, "Target Bin Location"),
+                        React.createElement("h3", { className: "text-5xl font-black tracking-tight" }, currentProduct.bin)),
+                    React.createElement("div", { className: "text-right" },
+                        React.createElement("span", { className: "text-xs uppercase font-bold text-black/70" }, "Warehouse Zone"),
+                        React.createElement("p", { className: `text-lg font-black px-3 py-1 rounded-lg ${currentProduct.locationZone === 'MAIN' ? 'bg-black text-amber-400' : 'bg-red-950 text-red-200'}` }, currentProduct.locationZone === 'MAIN' ? 'MAIN SHELF' : 'SECONDARY WAREHOUSE'))),
+                currentProduct.locationZone === 'SECONDARY' && (React.createElement("div", { className: "p-3 bg-red-950/80 border border-red-500 rounded-xl text-red-200 text-sm flex items-center gap-3" },
+                    React.createElement(Building2, { className: "w-6 h-6 text-red-400 shrink-0" }),
+                    React.createElement("p", null,
+                        React.createElement("strong", null, "Stock Location Notice:"),
+                        " Item is located in Secondary Annex. Stock transfer required if shelf is empty."))),
+                React.createElement("div", { className: "flex flex-col sm:flex-row gap-6 items-center bg-slate-950 p-5 rounded-2xl border border-slate-800" },
+                    React.createElement("img", { src: currentProduct.image, alt: currentProduct.name, className: "w-40 h-40 object-cover rounded-xl border-2 border-slate-700 shadow-md" }),
+                    React.createElement("div", { className: "space-y-3 text-center sm:text-left flex-1" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs text-slate-400 uppercase font-bold" },
+                                "Item ",
+                                currentPickItemIndex + 1,
+                                " of ",
+                                activeOrder.items.length),
+                            React.createElement("h3", { className: "text-2xl font-black text-white" }, currentProduct.name)),
+                        React.createElement("div", { className: "inline-block bg-indigo-950 border border-indigo-500/50 rounded-xl px-4 py-2" },
+                            React.createElement("span", { className: "text-xs text-indigo-300 font-bold uppercase block" }, "Required Variant"),
+                            React.createElement("span", { className: "text-xl font-extrabold text-amber-300" }, currentProduct.variant)),
+                        React.createElement("div", { className: "flex flex-wrap gap-4 text-xs text-slate-400 pt-1" },
+                            React.createElement("div", null,
+                                "SKU: ",
+                                React.createElement("span", { className: "font-mono text-slate-200 font-bold" }, currentProduct.sku)),
+                            React.createElement("div", null,
+                                "Expected Barcode: ",
+                                React.createElement("span", { className: "font-mono text-emerald-400 font-bold" }, currentProduct.barcode)))),
+                    React.createElement("div", { className: "bg-slate-900 border border-slate-700 p-4 rounded-2xl text-center min-w-[120px]" },
+                        React.createElement("span", { className: "text-xs uppercase font-bold text-slate-400" }, "PICK QTY"),
+                        React.createElement("p", { className: "text-4xl font-black text-emerald-400" },
+                            currentItem.picked,
+                            " / ",
+                            currentItem.quantity))),
+                React.createElement("form", { onSubmit: handlePhysicalScanSubmit, className: "space-y-3" },
+                    React.createElement("label", { className: "block text-sm font-bold text-slate-300" }, "Scan Item Barcode (Use USB Scanner or Virtual Scanner Pad):"),
+                    React.createElement("div", { className: "flex gap-2" },
+                        React.createElement("input", { ref: scanInputRef, type: "text", value: scannedInput, onChange: (e) => setScannedInput(e.target.value), placeholder: "Scan barcode string here...", className: "flex-1 bg-slate-950 border-2 border-indigo-500 rounded-xl px-4 py-3 font-mono text-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-400" }),
+                        React.createElement("button", { type: "submit", className: "px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base shadow-lg" }, "VERIFY"))),
+                React.createElement("div", { className: "pt-2 border-t border-slate-800 flex justify-between items-center" },
+                    React.createElement("p", { className: "text-xs text-slate-400" }, "Can't locate item on shelf or barcode damaged?"),
+                    React.createElement("button", { onClick: () => setDiscrepancyModalOpen(true), className: "px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-sm border border-amber-500/50 flex items-center gap-2" },
+                        React.createElement(AlertTriangle, { className: "w-4 h-4" }),
+                        "Report Missing / Gap"))),
+            React.createElement("div", { className: "lg:col-span-4 space-y-4" },
+                React.createElement("div", { className: "bg-slate-950 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4" },
+                    React.createElement("div", { className: "flex items-center gap-2 border-b border-slate-800 pb-3" },
+                        React.createElement(QrCode, { className: "w-5 h-5 text-indigo-400" }),
+                        React.createElement("h3", { className: "font-bold text-white text-base" }, "Virtual Barcode Simulator")),
+                    React.createElement("p", { className: "text-xs text-slate-400" }, "Click buttons below to simulate physical laser barcode scans for quick testing:"),
+                    React.createElement("button", { onClick: () => verifyBarcode(currentProduct.barcode), className: "w-full p-4 rounded-2xl bg-emerald-600/20 hover:bg-emerald-600/30 border-2 border-emerald-500 text-emerald-300 text-left font-bold transition flex items-center justify-between" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs uppercase text-emerald-400 font-extrabold block" }, "Simulate Correct Scan"),
+                            React.createElement("span", { className: "text-sm font-mono" }, currentProduct.barcode)),
+                        React.createElement(Check, { className: "w-6 h-6 text-emerald-400" })),
+                    React.createElement("button", { onClick: () => verifyBarcode('999900001111'), className: "w-full p-4 rounded-2xl bg-red-600/20 hover:bg-red-600/30 border-2 border-red-500 text-red-300 text-left font-bold transition flex items-center justify-between" },
+                        React.createElement("div", null,
+                            React.createElement("span", { className: "text-xs uppercase text-red-400 font-extrabold block" }, "Simulate Wrong Scan"),
+                            React.createElement("span", { className: "text-sm font-mono" }, "999900001111 (Wrong Item)")),
+                        React.createElement(X, { className: "w-6 h-6 text-red-400" })),
+                    React.createElement("div", { className: "pt-2 space-y-2" },
+                        React.createElement("h4", { className: "text-xs uppercase font-bold text-slate-400" }, "Order Pick List Status"),
+                        activeOrder.items.map((it, idx) => {
+                            const p = products.find((prod) => prod.sku === it.sku);
+                            const isCurrent = idx === currentPickItemIndex;
+                            const isDone = it.picked >= it.quantity;
+                            return (React.createElement("div", { key: idx, className: `p-3 rounded-xl border text-xs flex justify-between items-center ${isCurrent
+                                    ? 'bg-indigo-950/80 border-indigo-500 font-bold text-white'
+                                    : isDone
+                                        ? 'bg-slate-900 border-slate-800 text-slate-500 line-through'
+                                        : 'bg-slate-900 border-slate-800 text-slate-300'}` },
+                                React.createElement("div", null,
+                                    React.createElement("p", null, p === null || p === void 0 ? void 0 : p.name),
+                                    React.createElement("span", { className: "text-[10px] text-slate-400" }, p === null || p === void 0 ? void 0 : p.variant)),
+                                React.createElement("span", { className: "font-mono font-bold text-amber-400" },
+                                    it.picked,
+                                    "/",
+                                    it.quantity)));
+                        })))))) : (React.createElement("div", { className: "max-w-2xl mx-auto bg-slate-900 border-2 border-emerald-500 rounded-3xl p-8 shadow-2xl text-center space-y-6" },
+            React.createElement("div", { className: "inline-flex p-4 rounded-full bg-emerald-500/20 text-emerald-400" },
+                React.createElement(Package, { className: "w-16 h-16" })),
+            React.createElement("div", null,
+                React.createElement("h2", { className: "text-3xl font-black text-white" }, "ALL ITEMS PICKED!"),
+                React.createElement("p", { className: "text-slate-300 text-lg mt-1" }, "Ready for final packing and staging box assignment.")),
+            React.createElement("div", { className: "bg-slate-950 border border-slate-800 rounded-2xl p-4 text-left space-y-2" },
+                React.createElement("h3", { className: "text-xs uppercase font-bold text-slate-400 mb-2" }, "Packing Summary Verification"),
+                activeOrder.items.map((it, idx) => {
+                    const p = products.find((prod) => prod.sku === it.sku);
+                    return (React.createElement("div", { key: idx, className: "flex justify-between text-sm py-1 border-b border-slate-800 last:border-0" },
+                        React.createElement("span", { className: "text-slate-200 font-medium" }, p === null || p === void 0 ? void 0 :
+                            p.name,
+                            " (", p === null || p === void 0 ? void 0 :
+                            p.variant,
+                            ")"),
+                        React.createElement("span", { className: "font-mono font-bold text-emerald-400" },
+                            "x",
+                            it.quantity,
+                            " Verified")));
+                })),
+            React.createElement("button", { onClick: handleCompletePacking, className: "w-full py-5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl tracking-wide shadow-xl transition active:scale-95 flex items-center justify-center gap-3" },
+                React.createElement(Printer, { className: "w-6 h-6" }),
+                "PRINT LABEL & ASSIGN STAGING")))));
+}
+function OfficeDashboardView({ orders, allOrders, products, courierSchedules, statusFilter, setStatusFilter, searchQuery, setSearchQuery, priorityOnly, setPriorityOnly, handleTransferStock, highContrast, setActiveRole, setActiveOrderId }) {
+    const totalOrders = allOrders.length;
+    const issueOrders = allOrders.filter((o) => o.status === 'ISSUE');
+    const stagedOrders = allOrders.filter((o) => o.status === 'STAGED');
+    const shippedOrders = allOrders.filter((o) => o.status === 'SHIPPED');
+    return (React.createElement("div", { className: "space-y-6" },
+        React.createElement("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4" },
+            React.createElement("div", { className: "bg-slate-900 border border-slate-800 p-4 rounded-2xl" },
+                React.createElement("span", { className: "text-xs font-bold uppercase text-slate-400" }, "Total Today's Orders"),
+                React.createElement("p", { className: "text-3xl font-black text-white mt-1" }, totalOrders),
+                React.createElement("span", { className: "text-xs text-emerald-400 mt-1 inline-block" }, "\u2191 12% vs yesterday")),
+            React.createElement("div", { className: "bg-slate-900 border border-slate-800 p-4 rounded-2xl" },
+                React.createElement("span", { className: "text-xs font-bold uppercase text-slate-400" }, "Staged Boxes"),
+                React.createElement("p", { className: "text-3xl font-black text-indigo-400 mt-1" }, stagedOrders.length),
+                React.createElement("span", { className: "text-xs text-slate-400 mt-1 inline-block" }, "Awaiting courier pickup")),
+            React.createElement("div", { className: "bg-slate-900 border border-slate-800 p-4 rounded-2xl" },
+                React.createElement("span", { className: "text-xs font-bold uppercase text-slate-400" }, "Completed & Shipped"),
+                React.createElement("p", { className: "text-3xl font-black text-emerald-400 mt-1" }, shippedOrders.length),
+                React.createElement("span", { className: "text-xs text-slate-400 mt-1 inline-block" }, "Handed to drivers")),
+            React.createElement("div", { className: `p-4 rounded-2xl border ${issueOrders.length > 0 ? 'bg-amber-950/40 border-amber-500/80' : 'bg-slate-900 border-slate-800'}` },
+                React.createElement("span", { className: "text-xs font-bold uppercase text-amber-400" }, "Inventory Issues / Gaps"),
+                React.createElement("p", { className: "text-3xl font-black text-amber-300 mt-1" }, issueOrders.length),
+                React.createElement("span", { className: "text-xs text-amber-400/80 mt-1 inline-block" }, "Requires office review"))),
+        React.createElement("div", { className: "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4" },
+            React.createElement("div", { className: "flex items-center justify-between border-b border-slate-800 pb-3" },
+                React.createElement("div", { className: "flex items-center gap-2" },
+                    React.createElement(Truck, { className: "w-5 h-5 text-indigo-400" }),
+                    React.createElement("h3", { className: "font-extrabold text-white text-lg" }, "Today's Courier Pickup Schedule")),
+                React.createElement("span", { className: "text-xs text-slate-400" }, "Live Status")),
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4" }, courierSchedules.map((courier) => (React.createElement("div", { key: courier.id, className: "bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2" },
+                React.createElement("div", { className: "flex justify-between items-start" },
+                    React.createElement("h4", { className: "font-bold text-white" }, courier.name),
+                    React.createElement("span", { className: "px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-950 text-indigo-300 border border-indigo-800" }, courier.driverStatus)),
+                React.createElement("div", { className: "text-xs space-y-1" },
+                    React.createElement("div", { className: "flex justify-between text-slate-400" },
+                        React.createElement("span", null, "Next Arrival:"),
+                        React.createElement("span", { className: "font-bold text-amber-400" }, courier.nextPickup)),
+                    React.createElement("div", { className: "flex justify-between text-slate-400" },
+                        React.createElement("span", null, "Boxes Staged in Bay:"),
+                        React.createElement("span", { className: "font-bold text-white" },
+                            courier.stagedBoxes,
+                            " boxes")))))))),
+        issueOrders.length > 0 && (React.createElement("div", { className: "bg-amber-950/30 border-2 border-amber-500 rounded-2xl p-5 space-y-4" },
+            React.createElement("div", { className: "flex items-center gap-2 text-amber-400" },
+                React.createElement(ShieldAlert, { className: "w-6 h-6" }),
+                React.createElement("h3", { className: "text-lg font-black text-white" }, "Stock Discrepancies Flagged by Warehouse Floor")),
+            React.createElement("div", { className: "space-y-3" }, issueOrders.map((ord) => (React.createElement("div", { key: ord.id, className: "bg-slate-900 border border-amber-500/50 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4" },
+                React.createElement("div", null,
+                    React.createElement("div", { className: "flex items-center gap-2" },
+                        React.createElement("span", { className: "font-bold text-white text-base" }, ord.id),
+                        React.createElement("span", { className: "text-xs px-2 py-0.5 rounded bg-red-950 text-red-300 font-bold" }, ord.customer)),
+                    React.createElement("p", { className: "text-xs text-amber-300 font-medium mt-1" }, ord.issueReason)),
+                React.createElement("div", { className: "flex items-center gap-2 shrink-0" }, ord.items.map((it) => {
+                    const prod = products.find((p) => p.sku === it.sku);
+                    return (React.createElement("div", { key: it.sku, className: "flex items-center gap-2" },
+                        React.createElement("span", { className: "text-xs text-slate-400" },
+                            "Secondary Stock: ",
+                            React.createElement("strong", null,
+                                (prod === null || prod === void 0 ? void 0 : prod.stockSecondary) || 0,
+                                " units")),
+                        React.createElement("button", { onClick: () => handleTransferStock(it.sku), className: "px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs shadow transition" }, "Transfer 10 Units to Main Shelf")));
+                })))))))),
+        React.createElement("div", { className: "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4" },
+            React.createElement("div", { className: "flex flex-wrap justify-between items-center gap-4" },
+                React.createElement("div", { className: "flex items-center gap-2" },
+                    React.createElement(Layers, { className: "w-5 h-5 text-indigo-400" }),
+                    React.createElement("h3", { className: "font-bold text-white text-lg" }, "Master Order Pipeline Board")),
+                React.createElement("div", { className: "flex flex-wrap items-center gap-3" },
+                    React.createElement("div", { className: "relative" },
+                        React.createElement(Search, { className: "w-4 h-4 text-slate-500 absolute left-3 top-3" }),
+                        React.createElement("input", { type: "text", placeholder: "Search order ID, customer...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500" })),
+                    React.createElement("select", { value: statusFilter, onChange: (e) => setStatusFilter(e.target.value), className: "bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none" },
+                        React.createElement("option", { value: "ALL" }, "All Statuses"),
+                        React.createElement("option", { value: "RECEIVED" }, "Received"),
+                        React.createElement("option", { value: "PICKING" }, "Picking"),
+                        React.createElement("option", { value: "PACKING" }, "Packing"),
+                        React.createElement("option", { value: "STAGED" }, "Staged"),
+                        React.createElement("option", { value: "SHIPPED" }, "Shipped"),
+                        React.createElement("option", { value: "ISSUE" }, "Issue Flagged")),
+                    React.createElement("button", { onClick: () => setPriorityOnly(!priorityOnly), className: `px-3 py-2 rounded-xl text-xs font-bold transition border ${priorityOnly ? 'bg-red-600 text-white border-red-500' : 'bg-slate-950 text-slate-400 border-slate-800'}` }, "Priority Only"))),
+            React.createElement("div", { className: "overflow-x-auto rounded-xl border border-slate-800" },
+                React.createElement("table", { className: "w-full text-left text-xs" },
+                    React.createElement("thead", { className: "bg-slate-950 text-slate-400 uppercase font-bold border-b border-slate-800" },
+                        React.createElement("tr", null,
+                            React.createElement("th", { className: "p-3" }, "Order Ref"),
+                            React.createElement("th", { className: "p-3" }, "Customer"),
+                            React.createElement("th", { className: "p-3" }, "Channel"),
+                            React.createElement("th", { className: "p-3" }, "Priority / SLA"),
+                            React.createElement("th", { className: "p-3" }, "Status"),
+                            React.createElement("th", { className: "p-3" }, "Courier"),
+                            React.createElement("th", { className: "p-3" }, "Staging Bin"),
+                            React.createElement("th", { className: "p-3 text-right" }, "Action"))),
+                    React.createElement("tbody", { className: "divide-y divide-slate-800/60 bg-slate-900" }, orders.length === 0 ? (React.createElement("tr", null,
+                        React.createElement("td", { colSpan: "8", className: "text-center p-8 text-slate-500" }, "No orders match current search and status filters."))) : (orders.map((ord) => (React.createElement("tr", { key: ord.id, className: "hover:bg-slate-800/50 transition" },
+                        React.createElement("td", { className: "p-3 font-mono font-bold text-white" }, ord.id),
+                        React.createElement("td", { className: "p-3 text-slate-200 font-medium" }, ord.customer),
+                        React.createElement("td", { className: "p-3 text-slate-400" }, ord.channel),
+                        React.createElement("td", { className: "p-3" }, ord.isPriority ? (React.createElement("span", { className: "px-2 py-0.5 rounded bg-red-950 border border-red-500 text-red-300 font-extrabold text-[10px]" },
+                            "SAME-DAY (",
+                            ord.cutoffMinutes,
+                            "m)")) : (React.createElement("span", { className: "text-slate-500" }, "Standard Ground"))),
+                        React.createElement("td", { className: "p-3" },
+                            React.createElement("span", { className: `px-2 py-0.5 rounded text-[10px] font-bold ${ord.status === 'SHIPPED'
+                                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                                    : ord.status === 'STAGED'
+                                        ? 'bg-indigo-950 text-indigo-300 border border-indigo-800'
+                                        : ord.status === 'ISSUE'
+                                            ? 'bg-amber-950 text-amber-300 border border-amber-800'
+                                            : 'bg-slate-800 text-slate-300'}` }, ord.status)),
+                        React.createElement("td", { className: "p-3 text-slate-300" }, ord.courier),
+                        React.createElement("td", { className: "p-3 font-mono font-bold text-amber-400" }, ord.stagingZone || '—'),
+                        React.createElement("td", { className: "p-3 text-right" }, ord.status !== 'SHIPPED' && (React.createElement("button", { onClick: () => {
+                                setActiveOrderId(ord.id);
+                                setActiveRole('kiosk');
+                            }, className: "px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px]" }, "Launch in Kiosk")))))))))))));
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+}catch(e){document.getElementById('root').innerHTML='<pre style="padding:16px;color:#b00">App failed to start: '+String(e&&e.message||e)+'</pre>';console.error(e)}
+</script></body></html>
