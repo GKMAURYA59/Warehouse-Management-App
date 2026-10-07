@@ -65,7 +65,7 @@ The sounds are generated in the browser, so there are no audio files to install.
 
 ## Run locally
 
-There is nothing to install. Download `fulfillment-hub-full.html` and open it in a modern browser. The page needs an internet connection because it loads React and Tailwind from public CDNs.
+There is nothing to install. Download `index.html` and open it in a modern browser. The page needs an internet connection because it loads React and Tailwind from public CDNs.
 
 ## Sample data
 
