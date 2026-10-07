@@ -40,6 +40,20 @@ The warehouse team is experienced but not comfortable with technology, so:
 - one task per screen, large text and buttons, plain words
 - strong audio and colour feedback for right and wrong scans
 - the floor view is separate from the office view, so neither team sees clutter meant for the other
+  
+## Dark view and light view
+
+The app opens in a dark view, which is easy on the eyes on a screen or kiosk used all shift. The sun/moon button in the top bar switches to a high-contrast light view for bright warehouse lighting, where dark screens can be hard to read. Click it again to switch back. The choice only lasts until the page is reloaded.
+
+## Speaker and sound prompts
+
+The speaker button in the top bar turns sound on and off. Sound is on by default, so workers get feedback without having to look at the screen:
+
+a short rising two-note chime for a correct scan or a finished order
+a low buzz for a wrong scan, such as a barcode mismatch or a problem report
+a soft click for button presses
+
+The sounds are generated in the browser, so there are no audio files to install. Browsers only play sound after the first click or tap on the page, and the device volume needs to be up. Mute the speaker in quiet places or during demos.
 
 ## Try it in 2 minutes
 
