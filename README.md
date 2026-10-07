@@ -1,7 +1,7 @@
 # Warehouse-Order and Pickup Management-App
 
 
-A simple Warehouse-Order and Pickup Management-App app for XYZ, an e-commerce business that ships 200-300 orders a day from its own warehouse. It replaces spreadsheets and shared folders with two views: a manager dashboard for the office, and a guided Warehouse Kiosk for the floor team.
+A simple Warehouse-Order and Pickup Management-App for XYZ, an e-commerce business that ships 200-300 orders a day from its own warehouse. It replaces spreadsheets and shared folders with two views: a manager dashboard for the office, and a guided Warehouse Kiosk for the floor team.
 
 **Live demo:** https://gkmaurya59.github.io/Warehouse-Management-App/
 
